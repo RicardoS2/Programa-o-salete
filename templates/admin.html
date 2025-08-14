@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin - Catálogo Engenharia Civil</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <nav>
+      <h1>Admin Catálogo</h1>
+    </nav>
+
+    <section class="admin-form">
+      <h2>Adicionar Item</h2>
+      <form method="POST">
+        <input type="text" name="nome" placeholder="Nome" required />
+        <select name="categoria">
+          {% for cat in categorias %}
+          <option value="{{ cat }}">{{ cat }}</option>
+          {% endfor %}
+        </select>
+        <input type="number" step="0.01" name="preco" placeholder="Preço" required />
+        <input type="text" name="descricao" placeholder="Descrição" />
+        <input type="text" name="uso" placeholder="Uso" />
+        <button type="submit">Adicionar</button>
+      </form>
+    </section>
+
+    <section class="admin-list">
+      <h2>Itens</h2>
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Ação</th>
+        </tr>
+        {% for item in itens %}
+        <tr>
+          <td>{{ item.id }}</td>
+          <td>{{ item.nome }}</td>
+          <td>{{ item.categoria }}</td>
+          <td>{{ item.preco }}</td>
+          <td><a href="?remover={{ item.id }}">Remover</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </section>
+  </body>
+</html>
