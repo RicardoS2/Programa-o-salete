@@ -10,6 +10,7 @@
   <header class="site-header">
     <div class="wrap">
       <h1 class="brand">Catálogo — Engenharia Civil</h1>
+
       <div class="top-controls">
         <form method="GET" action="{{ url_for('index') }}" class="filter-form">
           <input name="nome" type="search" placeholder="Buscar por nome" value="{{ filtro_nome }}" />
@@ -21,37 +22,40 @@
           </select>
           <button type="submit" class="btn">Filtrar</button>
         </form>
+
         <a href="{{ url_for('admin') }}" class="btn btn-ghost">Admin</a>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- Carousel curto (CSS-only) -->
-    <section class="carousel-wrap">
-      <div class="carousel">
-        {% for item in items %}
-        <article class="card">
-          <img src="{{ item.image }}" alt="{{ item.name }}">
-          <div class="card-info">
-            <h3>{{ item.name }}</h3>
-            <p class="cat">{{ item.category }}</p>
-            <p class="price">R$ {{ item.price }}</p>
-          </div>
-        </article>
-        {% endfor %}
+    <!-- Carousel centralizado com largura reduzida -->
+    <section class="carousel-outer">
+      <div class="carousel-inner">
+        <div class="carousel" role="list">
+          {% for item in items %}
+          <article class="card" role="listitem">
+            <img src="{{ item.image }}" alt="{{ item.name }}">
+            <div class="card-info">
+              <h3>{{ item.name }}</h3>
+              <p class="cat">{{ item.category }}</p>
+              <p class="price">R$ {{ item.price }}</p>
+            </div>
+          </article>
+          {% endfor %}
 
-        <!-- duplicar para o efeito infinito -->
-        {% for item in items %}
-        <article class="card">
-          <img src="{{ item.image }}" alt="{{ item.name }}">
-          <div class="card-info">
-            <h3>{{ item.name }}</h3>
-            <p class="cat">{{ item.category }}</p>
-            <p class="price">R$ {{ item.price }}</p>
-          </div>
-        </article>
-        {% endfor %}
+          <!-- duplicar para efeito infinito -->
+          {% for item in items %}
+          <article class="card" role="listitem" aria-hidden="true">
+            <img src="{{ item.image }}" alt="{{ item.name }}">
+            <div class="card-info">
+              <h3>{{ item.name }}</h3>
+              <p class="cat">{{ item.category }}</p>
+              <p class="price">R$ {{ item.price }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
       </div>
     </section>
 
@@ -65,7 +69,7 @@
       </div>
     </section>
 
-    <!-- Grid (catálogo estilo loja) -->
+    <!-- Grid estilo catálogo (abaixo do carousel) -->
     <section class="catalog wrap">
       {% if items %}
         {% for item in items %}
