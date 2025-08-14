@@ -1,50 +1,35 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Catálogo Engenharia Civil</title>
-<link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-<nav>
-    <h1>Catálogo Engenharia Civil</h1>
-    <div class="filters">
-        <form method="GET">
-            <input type="text" name="nome" placeholder="Buscar por nome" value="{{ filtro_nome }}">
-            <select name="categoria">
-                <option value="">Todas Categorias</option>
-                {% for cat in categorias %}
-                <option value="{{ cat }}" {% if filtro_categoria==cat %}selected{% endif %}>{{ cat }}</option>
-                {% endfor %}
-            </select>
-            <input type="number" name="preco" placeholder="Preço máximo" value="{{ filtro_preco }}">
-            <button type="submit">Filtrar</button>
-        </form>
-    </div>
-</nav>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Catálogo Engenharia Civil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <nav>
+      <h1>Catálogo Engenharia Civil</h1>
+      <div class="filters">
+        <input type="text" id="searchName" placeholder="Buscar por nome" />
+        <select id="filterCategory">
+          <option value="">Todas as categorias</option>
+          {% for cat in categories %}
+          <option value="{{ cat }}">{{ cat }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </nav>
 
-<section class="carousel">
-    <div class="carousel-track">
-        {% for item in itens %}
-        <div class="carousel-item">
-            <img src="{{ item.imagem }}" alt="{{ item.nome }}">
-            <h3>{{ item.nome }}</h3>
-            <p>{{ item.categoria }}</p>
-            <p>R$ {{ item.preco }}</p>
-        </div>
-        {% endfor %}
+    <div class="carousel" id="carousel">
+      {% for item in items %}
+      <div class="carousel-item">
+        <img src="{{ item.image }}" alt="{{ item.name }}" />
+        <h3>{{ item.name }}</h3>
+        <p>Categoria: {{ item.category }}</p>
+        <p>Preço: {{ item.price }}</p>
+      </div>
+      {% endfor %}
     </div>
-</section>
 
-<script>
-const track = document.querySelector('.carousel-track');
-let speed = 1;
-function animate() {
-    track.scrollLeft += speed;
-    if (track.scrollLeft >= track.scrollWidth - track.clientWidth || track.scrollLeft <= 0) speed *= -1;
-    requestAnimationFrame(animate);
-}
-animate();
-</script>
-</body>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
 </html>

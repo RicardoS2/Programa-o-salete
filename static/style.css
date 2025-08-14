@@ -2,13 +2,12 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f4f4f4;
 }
 
 nav {
-  background: #1e90ff;
+  background-color: #004080;
   color: white;
-  padding: 10px 20px;
+  padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -18,74 +17,35 @@ nav h1 {
   margin: 0;
 }
 
-.filters form {
-  display: flex;
-  gap: 10px;
-}
-
 .filters input,
-.filters select,
-.filters button {
-  padding: 5px;
-  border-radius: 3px;
-  border: 1px solid #ccc;
+.filters select {
+  padding: 5px 10px;
+  margin-left: 10px;
+  border-radius: 5px;
+  border: none;
 }
 
 .carousel {
-  overflow: hidden;
-  background: #fff;
-  padding: 20px 0;
-}
-
-.carousel-track {
   display: flex;
-  gap: 20px;
   overflow-x: auto;
+  gap: 20px;
+  padding: 20px;
   scroll-behavior: smooth;
 }
 
 .carousel-item {
   min-width: 250px;
-  background: #eaeaea;
+  border: 1px solid #ccc;
+  border-radius: 10px;
   padding: 10px;
-  border-radius: 5px;
   transition: transform 0.3s;
-  text-align: center;
 }
 
 .carousel-item img {
   width: 100%;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 .carousel-item:hover {
   transform: scale(1.2);
-}
-
-.admin-form,
-.admin-list {
-  background: white;
-  padding: 20px;
-  margin: 20px;
-  border-radius: 5px;
-}
-
-.admin-form form input,
-.admin-form form select,
-.admin-form form button {
-  display: block;
-  margin: 5px 0;
-  padding: 5px;
-}
-
-.admin-list table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.admin-list th,
-.admin-list td {
-  border: 1px solid #ccc;
-  padding: 5px;
-  text-align: center;
 }
