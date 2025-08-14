@@ -1,50 +1,87 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Catálogo Engenharia Civil</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="utf-8" />
+  <title>Catálogo Engenharia Civil</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 </head>
 <body>
-<header>
-    <h1>Catálogo Engenharia Civil</h1>
-    <nav class="filters-nav">
-        <form method="GET" action="{{ url_for('index') }}">
-            <input type="text" name="nome" placeholder="Buscar por nome..." value="{{ request.args.get('nome', '') }}">
-            <select name="categoria">
-                <option value="">Todas</option>
-                {% for cat in categories %}
-                <option value="{{cat}}" {% if request.args.get('categoria')==cat %}selected{% endif %}>{{cat}}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Filtrar</button>
+  <header class="site-header">
+    <div class="wrap">
+      <h1 class="brand">Catálogo — Engenharia Civil</h1>
+      <div class="top-controls">
+        <form method="GET" action="{{ url_for('index') }}" class="filter-form">
+          <input name="nome" type="search" placeholder="Buscar por nome" value="{{ filtro_nome }}" />
+          <select name="categoria">
+            <option value="">Todas</option>
+            {% for cat in categories %}
+              <option value="{{cat}}" {% if filtro_categoria==cat %}selected{% endif %}>{{cat}}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn">Filtrar</button>
         </form>
-        <a href="{{ url_for('admin') }}">Admin</a>
-    </nav>
-</header>
+        <a href="{{ url_for('admin') }}" class="btn btn-ghost">Admin</a>
+      </div>
+    </div>
+  </header>
 
-<main>
-    <section class="carousel-container">
-        <div class="carousel">
-            {% for item in items %}
-            <div class="carousel-item">
-                <img src="{{item.image}}" alt="{{item.name}}">
-                <h3>{{item.name}}</h3>
-                <p>{{item.category}}</p>
-                <p>R$ {{item.price}}</p>
-            </div>
-            {% endfor %}
-            <!-- Duplicar para efeito infinito -->
-            {% for item in items %}
-            <div class="carousel-item">
-                <img src="{{item.image}}" alt="{{item.name}}">
-                <h3>{{item.name}}</h3>
-                <p>{{item.category}}</p>
-                <p>R$ {{item.price}}</p>
-            </div>
-            {% endfor %}
-        </div>
+  <main>
+    <!-- Carousel curto (CSS-only) -->
+    <section class="carousel-wrap">
+      <div class="carousel">
+        {% for item in items %}
+        <article class="card">
+          <img src="{{ item.image }}" alt="{{ item.name }}">
+          <div class="card-info">
+            <h3>{{ item.name }}</h3>
+            <p class="cat">{{ item.category }}</p>
+            <p class="price">R$ {{ item.price }}</p>
+          </div>
+        </article>
+        {% endfor %}
+
+        <!-- duplicar para o efeito infinito -->
+        {% for item in items %}
+        <article class="card">
+          <img src="{{ item.image }}" alt="{{ item.name }}">
+          <div class="card-info">
+            <h3>{{ item.name }}</h3>
+            <p class="cat">{{ item.category }}</p>
+            <p class="price">R$ {{ item.price }}</p>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
     </section>
-</main>
+
+    <!-- Botões de categoria -->
+    <section class="category-buttons">
+      <div class="wrap">
+        {% for cat in categories %}
+          <a class="category-btn" href="{{ url_for('index', categoria=cat) }}">{{ cat }}</a>
+        {% endfor %}
+        <a class="category-btn outline" href="{{ url_for('index') }}">Todas</a>
+      </div>
+    </section>
+
+    <!-- Grid (catálogo estilo loja) -->
+    <section class="catalog wrap">
+      {% if items %}
+        {% for item in items %}
+        <div class="product">
+          <img src="{{ item.image }}" alt="{{ item.name }}">
+          <div class="product-body">
+            <h4>{{ item.name }}</h4>
+            <p class="muted">{{ item.category }}</p>
+            <p class="price">R$ {{ item.price }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="empty">Nenhum item encontrado.</p>
+      {% endif %}
+    </section>
+  </main>
 </body>
 </html>

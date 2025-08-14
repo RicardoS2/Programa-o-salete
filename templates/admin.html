@@ -1,53 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Admin - Catálogo Engenharia Civil</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="utf-8" />
+  <title>Admin — Catálogo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 </head>
 <body>
-<header>
-    <h1>Administração do Catálogo</h1>
-    <nav>
-        <a href="{{ url_for('index') }}">Voltar ao Catálogo</a>
-    </nav>
-</header>
+  <header class="site-header">
+    <div class="wrap">
+      <h1 class="brand">Administração</h1>
+      <a href="{{ url_for('index') }}" class="btn btn-ghost">Ver catálogo</a>
+    </div>
+  </header>
 
-<main>
-    <section class="admin-section">
-        <h2>Adicionar Item</h2>
-        <form method="POST" action="{{ url_for('admin_add') }}" class="form-add">
-            <input type="text" name="name" placeholder="Nome" required>
-            <select name="category" required>
-                {% for cat in categories %}
-                <option value="{{cat}}">{{cat}}</option>
-                {% endfor %}
-            </select>
-            <input type="text" name="price" placeholder="Preço" required>
-            <input type="text" name="image" placeholder="URL da Imagem" required>
-            <button type="submit">Adicionar</button>
-        </form>
+  <main class="wrap">
+    <section class="admin-panel">
+      <h2>Adicionar Item</h2>
+      <form method="POST" action="{{ url_for('admin_add') }}" class="form-grid">
+        <input name="name" placeholder="Nome" required>
+        <select name="category" required>
+          {% for cat in categories %}
+            <option value="{{cat}}">{{cat}}</option>
+          {% endfor %}
+        </select>
+        <input name="price" placeholder="Preço (ex: 120.00)" required>
+        <input name="image" placeholder="URL da imagem (opcional)">
+        <button class="btn">Adicionar</button>
+      </form>
     </section>
 
-    <section class="admin-section">
-        <h2>Editar / Remover Itens</h2>
-        {% for item in items %}
+    <section class="admin-panel">
+      <h2>Itens Cadastrados</h2>
+      {% if items %}
+        {% for item_id, item in items.items() %}
         <div class="admin-item">
-            <form method="POST" action="{{ url_for('admin_edit', item_id=item.id) }}" class="form-edit">
-                <input type="text" name="name" value="{{item.name}}" required>
-                <select name="category" required>
-                    {% for cat in categories %}
-                    <option value="{{cat}}" {% if cat==item.category %}selected{% endif %}>{{cat}}</option>
-                    {% endfor %}
-                </select>
-                <input type="text" name="price" value="{{item.price}}" required>
-                <input type="text" name="image" value="{{item.image}}" required>
-                <button type="submit">Salvar</button>
-            </form>
-            <a href="{{ url_for('admin_delete', item_id=item.id) }}" class="delete">Remover</a>
+          <form method="POST" action="{{ url_for('admin_edit', item_id=item_id) }}" class="form-grid">
+            <input name="name" value="{{ item.name }}" required>
+            <select name="category" required>
+              {% for cat in categories %}
+              <option value="{{cat}}" {% if cat==item.category %}selected{% endif %}>{{cat}}</option>
+              {% endfor %}
+            </select>
+            <input name="price" value="{{ item.price }}">
+            <input name="image" value="{{ item.image }}">
+            <div class="actions">
+              <button class="btn">Salvar</button>
+              <a href="{{ url_for('admin_delete', item_id=item_id) }}" class="btn btn-danger" onclick="return confirm('Remover item?');">Remover</a>
+            </div>
+          </form>
         </div>
         {% endfor %}
+      {% else %}
+        <p class="muted">Sem itens cadastrados.</p>
+      {% endif %}
     </section>
-</main>
+  </main>
 </body>
 </html>
