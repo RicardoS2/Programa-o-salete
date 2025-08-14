@@ -94,6 +94,8 @@ body {
 }
 .carousel {
   display: flex;
+  height: auto;
+  width: 75%;
   gap: 18px;
   animation: scroll 22s linear infinite;
   align-items: center;
