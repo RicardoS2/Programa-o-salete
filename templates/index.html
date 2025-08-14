@@ -1,43 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Catálogo Engenharia Civil</title>
-    <link rel="stylesheet" href="/static/style.css" />
-  </head>
-  <body>
-    <header>
-      <h1>Catálogo Engenharia Civil</h1>
-      <div class="filters">
-        <input
-          type="text"
-          id="search"
-          placeholder="Buscar por nome..."
-          onkeyup="filterName()"
-        />
-        <select id="category" onchange="filterCategory()">
-          <option value="">Todas</option>
-          {% for cat in categories %}
-          <option value="{{cat}}">{{cat}}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <a href="./admin.html">Admin</a>
-    </header>
+<head>
+<meta charset="UTF-8">
+<title>Catálogo Engenharia Civil</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+    <h1>Catálogo Engenharia Civil</h1>
+    <nav class="filters-nav">
+        <form method="GET" action="{{ url_for('index') }}">
+            <input type="text" name="nome" placeholder="Buscar por nome..." value="{{ request.args.get('nome', '') }}">
+            <select name="categoria">
+                <option value="">Todas</option>
+                {% for cat in categories %}
+                <option value="{{cat}}" {% if request.args.get('categoria')==cat %}selected{% endif %}>{{cat}}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Filtrar</button>
+        </form>
+        <a href="{{ url_for('admin') }}">Admin</a>
+    </nav>
+</header>
 
+<main>
     <section class="carousel-container">
-      <div class="carousel">
-        {% for item in items %}
-        <div class="carousel-item">
-          <img src="{{item.image}}" alt="{{item.name}}" />
-          <h3>{{item.name}}</h3>
-          <p>{{item.category}}</p>
-          <p>R$ {{item.price}}</p>
+        <div class="carousel">
+            {% for item in items %}
+            <div class="carousel-item">
+                <img src="{{item.image}}" alt="{{item.name}}">
+                <h3>{{item.name}}</h3>
+                <p>{{item.category}}</p>
+                <p>R$ {{item.price}}</p>
+            </div>
+            {% endfor %}
+            <!-- Duplicar para efeito infinito -->
+            {% for item in items %}
+            <div class="carousel-item">
+                <img src="{{item.image}}" alt="{{item.name}}">
+                <h3>{{item.name}}</h3>
+                <p>{{item.category}}</p>
+                <p>R$ {{item.price}}</p>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-      </div>
     </section>
-
-    <script src="/static/script.js"></script>
-  </body>
+</main>
+</body>
 </html>

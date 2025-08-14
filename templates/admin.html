@@ -2,48 +2,52 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Admin - Catálogo</title>
+<title>Admin - Catálogo Engenharia Civil</title>
 <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 <header>
     <h1>Administração do Catálogo</h1>
+    <nav>
+        <a href="{{ url_for('index') }}">Voltar ao Catálogo</a>
+    </nav>
 </header>
 
-<section>
-<h2>Adicionar Item</h2>
-<form method="POST" action="/admin/add">
-    <input type="text" name="name" placeholder="Nome" required>
-    <select name="category" required>
-        {% for cat in categories %}
-        <option value="{{cat}}">{{cat}}</option>
-        {% endfor %}
-    </select>
-    <input type="text" name="price" placeholder="Preço" required>
-    <input type="text" name="image" placeholder="URL da Imagem" required>
-    <button type="submit">Adicionar</button>
-</form>
-</section>
+<main>
+    <section class="admin-section">
+        <h2>Adicionar Item</h2>
+        <form method="POST" action="{{ url_for('admin_add') }}" class="form-add">
+            <input type="text" name="name" placeholder="Nome" required>
+            <select name="category" required>
+                {% for cat in categories %}
+                <option value="{{cat}}">{{cat}}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="price" placeholder="Preço" required>
+            <input type="text" name="image" placeholder="URL da Imagem" required>
+            <button type="submit">Adicionar</button>
+        </form>
+    </section>
 
-<section>
-<h2>Editar / Remover</h2>
-{% for item_id, item in items.items() %}
-<div class="admin-item">
-    <form method="POST" action="/admin/edit/{{item_id}}">
-        <input type="text" name="name" value="{{item.name}}" required>
-        <select name="category" required>
-            {% for cat in categories %}
-            <option value="{{cat}}" {% if cat==item.category %}selected{% endif %}>{{cat}}</option>
-            {% endfor %}
-        </select>
-        <input type="text" name="price" value="{{item.price}}" required>
-        <input type="text" name="image" value="{{item.image}}" required>
-        <button type="submit">Salvar</button>
-    </form>
-    <a href="/admin/delete/{{item_id}}" class="delete">Remover</a>
-</div>
-{% endfor %}
-</section>
+    <section class="admin-section">
+        <h2>Editar / Remover Itens</h2>
+        {% for item in items %}
+        <div class="admin-item">
+            <form method="POST" action="{{ url_for('admin_edit', item_id=item.id) }}" class="form-edit">
+                <input type="text" name="name" value="{{item.name}}" required>
+                <select name="category" required>
+                    {% for cat in categories %}
+                    <option value="{{cat}}" {% if cat==item.category %}selected{% endif %}>{{cat}}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="price" value="{{item.price}}" required>
+                <input type="text" name="image" value="{{item.image}}" required>
+                <button type="submit">Salvar</button>
+            </form>
+            <a href="{{ url_for('admin_delete', item_id=item.id) }}" class="delete">Remover</a>
+        </div>
+        {% endfor %}
+    </section>
+</main>
 </body>
 </html>
-  

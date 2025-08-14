@@ -1,103 +1,91 @@
-/* ===== Reset & Base ===== */
+/* Reset básico */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f2f4f7;
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
   color: #333;
 }
-a {
-  text-decoration: none;
-  color: inherit;
-}
-button {
-  cursor: pointer;
+
+/* Header */
+header {
+  background: #004aad;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
 }
 
-/* ===== Header ===== */
-header {
-  background: linear-gradient(90deg, #0d3b66, #1d6fa5);
-  color: white;
-  padding: 30px 20px;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+header a {
+  color: #fff;
+  margin-left: 20px;
+  text-decoration: none;
 }
-header h1 {
-  font-size: 2.2rem;
+
+/* Admin Section */
+.admin-section {
+  max-width: 900px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 15px;
 }
 
-/* ===== Filters ===== */
-.filters {
-  margin-top: 10px;
+.admin-item form {
+  flex: 1;
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
   gap: 10px;
 }
-.filters input,
-.filters select {
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.filters input:focus,
-.filters select:focus {
-  box-shadow: 0 0 0 3px rgba(29, 111, 165, 0.3);
+
+.admin-item .delete {
+  background: #e74c3c;
+  color: #fff;
+  padding: 5px 12px;
+  text-decoration: none;
+  border-radius: 5px;
 }
 
-/* ===== Carousel ===== */
+/* Carousel */
 .carousel-container {
   overflow: hidden;
+  max-width: 1000px;
   margin: 30px auto;
-  width: 90%;
-}
-.carousel {
-  display: flex;
-  gap: 20px;
-  animation: scroll 25s linear infinite;
-}
-.carousel:hover {
-  animation-play-state: paused;
-}
-.carousel-item {
-  background: white;
-  border-radius: 12px;
-  padding: 15px;
-  min-width: 250px;
-  transition: transform 0.4s, box-shadow 0.3s;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-.carousel-item:hover {
-  transform: scale(1.2);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-}
-.carousel-item img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
-.carousel-item h3 {
-  font-size: 1.1rem;
-  margin-bottom: 5px;
-  color: #0d3b66;
-}
-.carousel-item p {
-  font-size: 0.95rem;
-  color: #555;
-  margin-bottom: 5px;
+  padding: 10px 0;
 }
 
-/* ===== Carousel Animation ===== */
+.carousel {
+  display: flex;
+  width: max-content;
+  animation: scroll 30s linear infinite;
+}
+
+.carousel-item {
+  min-width: 200px;
+  margin-right: 15px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.carousel-item:hover {
+  transform: scale(1.2);
+}
+
+/* Scroll infinito */
 @keyframes scroll {
   0% {
     transform: translateX(0);
@@ -107,75 +95,29 @@ header h1 {
   }
 }
 
-/* ===== Admin Page ===== */
-section {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-h2 {
+/* Filtros */
+.filters-nav form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
   margin-bottom: 15px;
-  color: #1d6fa5;
 }
-form input,
-form select {
-  width: calc(50% - 10px);
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 8px;
+
+.filters-nav input,
+.filters-nav select,
+.filters-nav button {
+  padding: 8px;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  font-size: 1rem;
 }
-form button {
-  background: #0d3b66;
-  color: white;
+
+.filters-nav button {
+  background: #004aad;
+  color: #fff;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  transition: 0.3s;
-}
-form button:hover {
-  background: #1d6fa5;
+  cursor: pointer;
 }
 
-.admin-item {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 10px;
-  background: #f7f9fc;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-.admin-item form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  flex: 1;
-}
-.admin-item .delete {
-  color: white;
-  background: #e63946;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: 0.3s;
-}
-.admin-item .delete:hover {
-  background: #d62828;
-}
-
-/* ===== Responsividade ===== */
-@media (max-width: 768px) {
-  .carousel-item {
-    min-width: 200px;
-  }
-  form input,
-  form select {
-    width: 100%;
-  }
+.filters-nav button:hover {
+  background: #003380;
 }
