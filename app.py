@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
 import requests
-import json
 
 app = Flask(__name__)
 
@@ -19,22 +18,18 @@ CATEGORIES = [
 
 # ----------------- Funções auxiliares -----------------
 def get_items():
-    """Pega todos os itens do Firebase"""
     response = requests.get(FIREBASE_DB_URL + "items.json")
     if response.status_code == 200 and response.json():
         return response.json()
     return {}
 
 def add_item(item):
-    """Adiciona item ao Firebase"""
     requests.post(FIREBASE_DB_URL + "items.json", json=item)
 
 def update_item(item_id, item):
-    """Atualiza item no Firebase"""
     requests.patch(FIREBASE_DB_URL + f"items/{item_id}.json", json=item)
 
 def delete_item(item_id):
-    """Remove item do Firebase"""
     requests.delete(FIREBASE_DB_URL + f"items/{item_id}.json")
 
 # ----------------- Rotas -----------------
@@ -79,12 +74,11 @@ def admin_edit(item_id):
     item = {"name": name, "category": category, "price": price, "image": image}
     update_item(item_id, item)
     return redirect(url_for("admin"))
-    
+
 @app.route("/admin/delete/<item_id>")
 def admin_delete(item_id):
     delete_item(item_id)
     return redirect(url_for("admin"))
 
-# ----------------- Run -----------------
-if __name__ == "__main__":
-    app.run(debug=True)
+# ----------------- Remover app.run() para Vercel -----------------
+# Vercel chamará o app diretamente
