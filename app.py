@@ -6,7 +6,7 @@ app = Flask(__name__)
 # URL do Firebase Realtime Database
 FIREBASE_DB_URL = "https://salete-d88c1-default-rtdb.firebaseio.com/"
 
-# Categorias fixas para engenharia civil
+# Categorias fixas
 CATEGORIES = [
     "Estruturas",
     "Materiais",
@@ -16,7 +16,7 @@ CATEGORIES = [
     "Segurança"
 ]
 
-# ----------------- Funções auxiliares -----------------
+# ----------------- Funções -----------------
 def get_items():
     response = requests.get(FIREBASE_DB_URL + "items.json")
     if response.status_code == 200 and response.json():
@@ -38,8 +38,8 @@ def index():
     items = get_items()
     filtro_categoria = request.args.get("categoria", "")
     filtro_nome = request.args.get("nome", "").lower()
-
     filtered_items = []
+
     for key, item in items.items():
         if (filtro_categoria in item["category"] or not filtro_categoria) and \
            (filtro_nome in item["name"].lower() or not filtro_nome):
@@ -79,6 +79,3 @@ def admin_edit(item_id):
 def admin_delete(item_id):
     delete_item(item_id)
     return redirect(url_for("admin"))
-
-# ----------------- Remover app.run() para Vercel -----------------
-# Vercel chamará o app diretamente
