@@ -3,14 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <title>Catálogo Engenharia Civil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 </head>
 <body>
   <header class="site-header">
-    <div class="wrap">
-      <h1 class="brand">Catálogo — Engenharia Civil</h1>
-
+    <div class="wrap header-row">
+      <div class="brand-wrap">
+        <h1 class="brand">Catálogo — Engenharia Civil</h1>
+        <p class="brand-sub">Materiais e insumos • referência de preços</p>
+      </div>
       <div class="top-controls">
         <form method="GET" action="{{ url_for('index') }}" class="filter-form">
           <input name="nome" type="search" placeholder="Buscar por nome" value="{{ filtro_nome }}" />
@@ -22,14 +27,12 @@
           </select>
           <button type="submit" class="btn">Filtrar</button>
         </form>
-
         <a href="{{ url_for('admin') }}" class="btn btn-ghost">Admin</a>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- Carousel centralizado com largura reduzida -->
     <section class="carousel-outer">
       <div class="carousel-inner">
         <div class="carousel" role="list">
@@ -37,19 +40,17 @@
           <article class="card" role="listitem">
             <img src="{{ item.image }}" alt="{{ item.name }}">
             <div class="card-info">
-              <h3>{{ item.name }}</h3>
+              <h3 class="product-name">{{ item.name }}</h3>
               <p class="cat">{{ item.category }}</p>
               <p class="price">R$ {{ item.price }}</p>
             </div>
           </article>
           {% endfor %}
-
-          <!-- duplicar para efeito infinito -->
           {% for item in items %}
           <article class="card" role="listitem" aria-hidden="true">
             <img src="{{ item.image }}" alt="{{ item.name }}">
             <div class="card-info">
-              <h3>{{ item.name }}</h3>
+              <h3 class="product-name">{{ item.name }}</h3>
               <p class="cat">{{ item.category }}</p>
               <p class="price">R$ {{ item.price }}</p>
             </div>
@@ -59,7 +60,6 @@
       </div>
     </section>
 
-    <!-- Botões de categoria -->
     <section class="category-buttons">
       <div class="wrap">
         {% for cat in categories %}
@@ -69,15 +69,15 @@
       </div>
     </section>
 
-    <!-- Grid estilo catálogo (abaixo do carousel) -->
     <section class="catalog wrap">
       {% if items %}
         {% for item in items %}
         <div class="product">
           <img src="{{ item.image }}" alt="{{ item.name }}">
           <div class="product-body">
-            <h4>{{ item.name }}</h4>
+            <h4 class="prod-title">{{ item.name }}</h4>
             <p class="muted">{{ item.category }}</p>
+            <p class="prod-desc">{{ item.description }}</p>
             <p class="price">R$ {{ item.price }}</p>
           </div>
         </div>

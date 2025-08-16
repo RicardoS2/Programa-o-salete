@@ -1,136 +1,128 @@
 from flask import Flask, render_template, request, redirect, url_for
-import requests
-import os
+import requests, uuid
 
 app = Flask(__name__)
+FIREBASE = "https://salete-d88c1-default-rtdb.firebaseio.com".rstrip("/")
 
-# URL do Firebase Realtime Database (sua URL)
-FIREBASE_DB_URL = "https://salete-d88c1-default-rtdb.firebaseio.com/"
+def _url(path):
+    return f"{FIREBASE}/{path}.json"
 
-# Categorias fixas
-CATEGORIES = [
-    "Estruturas",
-    "Materiais",
-    "Topografia",
-    "Construção Civil",
-    "Projetos",
-    "Segurança"
-]
-
-# ------------------- Utilitários Firebase (REST) -------------------
-def _items_url():
-    return FIREBASE_DB_URL.rstrip("/") + "/items.json"
-
-def _item_url(item_id):
-    return FIREBASE_DB_URL.rstrip("/") + f"/items/{item_id}.json"
-
-def get_items_dict():
-    """Retorna dicionário {id: item} ou {}"""
+def _get(path):
     try:
-        r = requests.get(_items_url(), timeout=6)
+        r = requests.get(_url(path), timeout=6)
         r.raise_for_status()
-        data = r.json() or {}
-        if isinstance(data, dict):
-            return data
-        return {}
+        return r.json() or {}
     except Exception:
         return {}
 
-def add_item_dict(item):
+def _put(path, data):
     try:
-        requests.post(_items_url(), json=item, timeout=6)
+        requests.put(_url(path), json=data, timeout=6)
     except Exception:
         pass
 
-def update_item_dict(item_id, item):
+def _delete(path):
     try:
-        requests.patch(_item_url(item_id), json=item, timeout=6)
+        requests.delete(_url(path), timeout=6)
     except Exception:
         pass
 
-def delete_item_dict(item_id):
-    try:
-        requests.delete(_item_url(item_id), timeout=6)
-    except Exception:
-        pass
+def categories_map():
+    raw = _get("categories")
+    if not isinstance(raw, dict):
+        return {}
+    return raw
 
-# ------------------- Rotas -------------------
+def categories_list():
+    cmap = categories_map()
+    out = []
+    for k, v in cmap.items():
+        if isinstance(v, str):
+            out.append({"id": k, "name": v})
+        elif isinstance(v, dict) and "name" in v:
+            out.append({"id": k, "name": v["name"]})
+    out.sort(key=lambda x: x["name"].lower())
+    return out
+
 @app.route("/")
 def index():
-    """
-    Filtros via query string:
-     - nome (busca parcial, case-insensitive)
-     - categoria (igual)
-    """
-    items_dict = get_items_dict()
-    filtro_nome = (request.args.get("nome") or "").strip().lower()
-    filtro_categoria = (request.args.get("categoria") or "").strip()
-
-    # Convert dict -> list com id incluso
-    items_list = []
-    for k, v in (items_dict.items() if isinstance(items_dict, dict) else []):
-        # garantir campos
-        name = v.get("name", "")
-        category = v.get("category", "")
-        price = v.get("price", "")
-        image = v.get("image", "https://placehold.co/600x400")
-        # filtros
-        if filtro_categoria and category != filtro_categoria:
+    items_map = _get("items") or {}
+    cats = [c["name"] for c in categories_list()]
+    q = (request.args.get("nome") or "").strip().lower()
+    cat_filter = (request.args.get("categoria") or "").strip()
+    items = []
+    for pid, p in (items_map or {}).items():
+        name = p.get("name", "")
+        cat = p.get("category", "")
+        if cat_filter and cat != cat_filter:
             continue
-        if filtro_nome and filtro_nome not in name.lower():
+        if q and q not in name.lower():
             continue
-        items_list.append({
-            "id": k,
+        items.append({
+            "id": pid,
             "name": name,
-            "category": category,
-            "price": price,
-            "image": image
+            "category": cat,
+            "price": p.get("price", ""),
+            "image": p.get("image", "https://placehold.co/600x400"),
+            "description": p.get("description", "")
         })
-
-    # ordenar por categoria then name
-    items_list.sort(key=lambda x: (x["category"].lower(), x["name"].lower()))
-    return render_template("index.html", items=items_list, categories=CATEGORIES, filtro_nome=filtro_nome, filtro_categoria=filtro_categoria)
+    items.sort(key=lambda x: (x["category"].lower() if x["category"] else "", x["name"].lower()))
+    return render_template("index.html", items=items, categories=cats, filtro_nome=q, filtro_categoria=cat_filter)
 
 @app.route("/admin")
 def admin():
-    items_dict = get_items_dict()
-    # manter dict to iterate in template with ids as keys
-    return render_template("admin.html", items=items_dict, categories=CATEGORIES)
+    items = _get("items") or {}
+    cats = categories_list()
+    return render_template("admin.html", items=items, categories=cats)
 
 @app.route("/admin/add", methods=["POST"])
 def admin_add():
-    name = request.form.get("name", "").strip()
-    category = request.form.get("category", "").strip()
-    price = request.form.get("price", "").strip()
-    image = request.form.get("image", "").strip() or "https://placehold.co/600x400"
-
-    if not name or category not in CATEGORIES:
+    name = (request.form.get("name") or "").strip()
+    category = (request.form.get("category") or "").strip()
+    price = (request.form.get("price") or "").strip()
+    image = (request.form.get("image") or "").strip() or "https://placehold.co/600x400"
+    description = (request.form.get("description") or "").strip()
+    if not name or not category:
         return redirect(url_for("admin"))
-
-    item = {"name": name, "category": category, "price": price, "image": image}
-    add_item_dict(item)
+    new_id = uuid.uuid4().hex[:12]
+    _put(f"items/{new_id}", {"name": name, "category": category, "price": price, "image": image, "description": description})
     return redirect(url_for("admin"))
 
 @app.route("/admin/edit/<item_id>", methods=["POST"])
 def admin_edit(item_id):
-    name = request.form.get("name", "").strip()
-    category = request.form.get("category", "").strip()
-    price = request.form.get("price", "").strip()
-    image = request.form.get("image", "").strip() or "https://placehold.co/600x400"
-
-    if not name or category not in CATEGORIES:
+    name = (request.form.get("name") or "").strip()
+    category = (request.form.get("category") or "").strip()
+    price = (request.form.get("price") or "").strip()
+    image = (request.form.get("image") or "").strip() or "https://placehold.co/600x400"
+    description = (request.form.get("description") or "").strip()
+    if not name or not category:
         return redirect(url_for("admin"))
-
-    item = {"name": name, "category": category, "price": price, "image": image}
-    update_item_dict(item_id, item)
+    _put(f"items/{item_id}", {"name": name, "category": category, "price": price, "image": image, "description": description})
     return redirect(url_for("admin"))
 
 @app.route("/admin/delete/<item_id>")
 def admin_delete(item_id):
-    delete_item_dict(item_id)
+    _delete(f"items/{item_id}")
     return redirect(url_for("admin"))
 
-# Optional: allow running locally for dev. Vercel ignores this.
+@app.route("/admin/add_category", methods=["POST"])
+def admin_add_category():
+    new = (request.form.get("category") or "").strip()
+    if not new:
+        return redirect(url_for("admin"))
+    cmap = categories_map()
+    values = {v for v in (cmap.values() if isinstance(cmap, dict) else []) if isinstance(v, str)}
+    if new in values:
+        return redirect(url_for("admin"))
+    new_id = "c_" + uuid.uuid4().hex[:10]
+    _put(f"categories/{new_id}", new)
+    return redirect(url_for("admin"))
+
+@app.route("/admin/delete_category/<cat_id>")
+def admin_delete_category(cat_id):
+    _delete(f"categories/{cat_id}")
+    return redirect(url_for("admin"))
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(__import__("os").environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)

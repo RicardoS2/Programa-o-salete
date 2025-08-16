@@ -3,29 +3,62 @@
 <head>
   <meta charset="utf-8" />
   <title>Admin — Catálogo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 </head>
 <body>
   <header class="site-header">
-    <div class="wrap">
-      <h1 class="brand">Administração</h1>
-      <a href="{{ url_for('index') }}" class="btn btn-ghost">Ver catálogo</a>
+    <div class="wrap header-row">
+      <div class="brand-wrap">
+        <h1 class="brand">Administração</h1>
+        <p class="brand-sub">Gerencie categorias e itens</p>
+      </div>
+      <div class="top-controls">
+        <a href="{{ url_for('index') }}" class="btn btn-ghost">Ver catálogo</a>
+      </div>
     </div>
   </header>
 
   <main class="wrap">
     <section class="admin-panel">
+      <h2>Categorias</h2>
+      <form method="POST" action="{{ url_for('admin_add_category') }}" class="form-grid">
+        <input name="category" placeholder="Nova categoria" required>
+        <button class="btn">Adicionar</button>
+      </form>
+
+      <div class="category-list-wrap" style="margin-top:12px">
+        {% if categories %}
+          <div class="category-grid">
+            {% for c in categories %}
+              <div class="category-pill-row">
+                <span class="category-pill">{{ c.name }}</span>
+                {% for k,v in (_get('categories') if false else {}) %}
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="muted">Nenhuma categoria encontrada.</p>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="admin-panel">
       <h2>Adicionar Item</h2>
       <form method="POST" action="{{ url_for('admin_add') }}" class="form-grid">
         <input name="name" placeholder="Nome" required>
         <select name="category" required>
-          {% for cat in categories %}
-            <option value="{{cat}}">{{cat}}</option>
+          {% for c in categories %}
+            <option value="{{c.name}}">{{c.name}}</option>
           {% endfor %}
         </select>
-        <input name="price" placeholder="Preço (ex: 120.00)" required>
+        <input name="price" placeholder="Preço (ex: 120,00)" required>
         <input name="image" placeholder="URL da imagem (opcional)">
+        <input name="description" placeholder="Descrição curta">
         <button class="btn">Adicionar</button>
       </form>
     </section>
@@ -38,12 +71,13 @@
           <form method="POST" action="{{ url_for('admin_edit', item_id=item_id) }}" class="form-grid">
             <input name="name" value="{{ item.name }}" required>
             <select name="category" required>
-              {% for cat in categories %}
-              <option value="{{cat}}" {% if cat==item.category %}selected{% endif %}>{{cat}}</option>
+              {% for c in categories %}
+              <option value="{{c.name}}" {% if c.name==item.category %}selected{% endif %}>{{c.name}}</option>
               {% endfor %}
             </select>
             <input name="price" value="{{ item.price }}">
             <input name="image" value="{{ item.image }}">
+            <input name="description" value="{{ item.description }}">
             <div class="actions">
               <button class="btn">Salvar</button>
               <a href="{{ url_for('admin_delete', item_id=item_id) }}" class="btn btn-danger" onclick="return confirm('Remover item?');">Remover</a>

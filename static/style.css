@@ -1,106 +1,121 @@
-/* Reset básico */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 :root {
-  --accent: #0d3b66;
-  --accent-2: #1d6fa5;
-  --muted: #6b7280;
-  --bg: #f5f7fa;
+  --primary: #2605b5;
+  --bg: #fafafc;
   --card: #ffffff;
+  --muted: #7b8896;
+  --shadow: rgba(16, 24, 40, 0.06);
   --radius: 12px;
+  --white: #ffffff;
+  --glass: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(250, 250, 252, 0.9));
+}
+html,
+body {
+  height: 100%;
 }
 body {
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial;
   background: var(--bg);
-  color: #111;
+  color: #1b2430;
+  font-family: 'Times New Roman', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.45;
 }
-
-/* layout wrap */
 .wrap {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 22px;
 }
-
-/* header */
 .site-header {
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  color: #fff;
-  padding: 18px 0;
-  box-shadow: 0 6px 20px rgba(10, 20, 40, 0.08);
+  background: linear-gradient(90deg, var(--primary), #3a2bd9);
+  color: var(--white);
+  padding: 22px 0;
+  box-shadow: 0 8px 26px var(--shadow);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
-.site-header .wrap {
+.header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 .brand {
+  font-size: 1.4rem;
   font-weight: 700;
-  font-size: 1.3rem;
+  letter-spacing: 0.2px;
+  font-family: Inter, Arial, sans-serif;
+}
+.brand-sub {
+  font-size: 0.85rem;
+  opacity: 0.92;
+  margin-top: 4px;
+  font-family: Inter, Arial, sans-serif;
 }
 .top-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.btn {
-  background: var(--accent);
-  color: #fff;
-  padding: 9px 14px;
-  border-radius: 10px;
-  border: none;
-  text-decoration: none;
-  font-weight: 600;
-}
-.btn-ghost {
-  background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.12);
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 8px;
+  gap: 14px;
 }
 .filter-form {
   display: flex;
   gap: 10px;
   align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 6px;
+  border-radius: 10px;
 }
 .filter-form input[type='search'],
 .filter-form select {
-  padding: 8px 10px;
+  padding: 9px 12px;
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(16, 24, 40, 0.05);
+  background: rgba(255, 255, 255, 0.9);
+  font-family: Inter, Arial, sans-serif;
 }
-
-/* ===== CAROUSEL CENTRALIZADO ===== */
+.btn {
+  font-family: Inter, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--white);
+  color: var(--primary);
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn-ghost {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  color: var(--white);
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+.btn-danger {
+  background: #ff5b5b;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+}
 .carousel-outer {
   display: flex;
   justify-content: center;
   margin: 30px 0;
 }
-
-/* Inner limita a largura do carrossel (aqui: 820px) */
 .carousel-inner {
-  width: 820px; /* largura fixa central do carrossel */
+  width: 820px;
   max-width: 96%;
   overflow: hidden;
   border-radius: 14px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.9),
-    rgba(250, 250, 252, 0.95)
-  );
-  padding: 12px 6px;
-  box-shadow: 0 8px 30px rgba(15, 40, 60, 0.06);
+  background: var(--glass);
+  padding: 12px;
+  box-shadow: 0 12px 34px var(--shadow);
 }
-
-/* Track que roda em loop (duplicação no template) */
 .carousel {
   display: flex;
   gap: 14px;
@@ -108,14 +123,12 @@ body {
   animation: scroll 22s linear infinite;
   will-change: transform;
 }
-
-/* Card pequeno para aparecer limpo no centro */
 .card {
-  min-width: 180px; /* largura de cada card */
+  min-width: 180px;
   max-width: 180px;
   background: var(--card);
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(10, 20, 40, 0.06);
+  border-radius: 12px;
+  box-shadow: 0 8px 22px var(--shadow);
   overflow: hidden;
   transition: transform 0.28s, box-shadow 0.28s;
   text-align: left;
@@ -127,12 +140,14 @@ body {
   display: block;
 }
 .card-info {
-  padding: 10px;
+  padding: 12px;
 }
-.card-info h3 {
-  font-size: 0.95rem;
+.product-name {
+  font-family: Inter, Arial, sans-serif;
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 1rem;
   margin-bottom: 6px;
-  color: var(--accent);
 }
 .card-info .cat {
   font-size: 0.82rem;
@@ -140,17 +155,13 @@ body {
   margin-bottom: 6px;
 }
 .card-info .price {
-  font-weight: 700;
+  font-weight: 800;
   color: #0b4f73;
 }
-
-/* Zoom leve ao hover, ainda adequado para o centro */
 .card:hover {
-  transform: translateY(-6px) scale(1.06);
-  box-shadow: 0 18px 48px rgba(10, 20, 40, 0.16);
+  transform: translateY(-6px) scale(1.04);
+  box-shadow: 0 20px 50px rgba(16, 24, 40, 0.14);
 }
-
-/* animação infinito traduzindo metade da largura total (duplica-se os itens) */
 @keyframes scroll {
   0% {
     transform: translateX(0);
@@ -159,71 +170,74 @@ body {
     transform: translateX(-50%);
   }
 }
-
-/* Botões de categoria */
 .category-buttons {
-  padding: 10px 0;
+  padding: 12px 0;
   text-align: center;
 }
 .category-btn {
   display: inline-block;
-  background: #fff;
-  color: var(--accent);
-  border: 1px solid rgba(13, 59, 102, 0.08);
+  background: var(--card);
+  color: var(--primary);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   padding: 8px 14px;
   border-radius: 999px;
   margin: 6px;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+  font-family: Inter;
 }
 .category-btn.outline {
   background: transparent;
-  border: 1px solid rgba(13, 59, 102, 0.15);
+  border: 1px solid rgba(16, 24, 40, 0.06);
 }
-
-/* Catalog grid (baixo do carrossel) */
 .catalog {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
   padding: 28px 20px;
 }
 .product {
   background: var(--card);
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 8px 20px rgba(10, 20, 40, 0.04);
-  transition: transform 0.24s;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 10px 28px var(--shadow);
+  transition: transform 0.22s;
 }
 .product img {
   width: 100%;
-  height: 220px;
+  height: 200px;
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  border-radius: 10px;
+  margin-bottom: 12px;
 }
 .product-body h4 {
-  font-size: 1rem;
-  margin-bottom: 6px;
-  color: #0d3b66;
+  font-family: Inter, Arial, sans-serif;
+  font-weight: 700;
+  color: #141a2b;
+  margin-bottom: 8px;
 }
 .product-body .muted {
   font-size: 0.9rem;
   color: var(--muted);
   margin-bottom: 8px;
 }
-.product-body .price {
-  font-weight: 700;
-  color: #0b4f73;
+.product-body .prod-desc {
+  font-size: 0.92rem;
+  color: #2b3340;
+  margin-bottom: 10px;
+  font-family: 'Times New Roman', Georgia, serif;
 }
-
-/* Admin panels */
+.product-body .price {
+  font-weight: 900;
+  color: var(--primary);
+  font-family: Inter;
+}
 .admin-panel {
   background: var(--card);
   border-radius: 12px;
   padding: 18px;
   margin: 20px 0;
-  box-shadow: 0 8px 20px rgba(10, 20, 40, 0.04);
+  box-shadow: 0 10px 26px var(--shadow);
 }
 .form-grid {
   display: grid;
@@ -238,15 +252,26 @@ body {
   padding: 10px;
   border-radius: 10px;
   background: #fbfdff;
-  border: 1px solid rgba(10, 20, 40, 0.03);
+  border: 1px solid rgba(16, 24, 40, 0.03);
 }
 .actions {
   display: flex;
   gap: 8px;
   align-items: center;
 }
-
-/* Responsividade */
+.category-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.category-pill {
+  background: rgba(38, 5, 181, 0.08);
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: var(--primary);
+  font-weight: 700;
+  font-family: Inter;
+}
 @media (max-width: 980px) {
   .carousel-inner {
     width: 92%;
